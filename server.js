@@ -215,6 +215,10 @@ app.post('/webhook/teams', async (req, res) => {
 async function setupOpenPhoneWebhooks() {
   try {
     console.log('Setting up OpenPhone webhooks...');
+    console.log('Config check:', {
+      baseUrl: config.baseUrl,
+      apiKey: config.openphone.apiKey ? 'Set' : 'Missing'
+    });
     
     // Create webhook for call events
     const webhookData = {
@@ -263,7 +267,24 @@ app.get('/status', (req, res) => {
   });
 });
 
-// Manual webhook setup endpoint (call this once after deployment)
+// Manual webhook setup endpoint (call this once after deployment) - BOTH GET AND POST
+app.get('/setup-webhooks', async (req, res) => {
+  try {
+    const webhook = await setupOpenPhoneWebhooks();
+    res.json({
+      success: true,
+      webhook: webhook,
+      message: 'OpenPhone webhook set up successfully!'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      details: error.response?.data
+    });
+  }
+});
+
 app.post('/setup-webhooks', async (req, res) => {
   try {
     const webhook = await setupOpenPhoneWebhooks();
@@ -275,7 +296,8 @@ app.post('/setup-webhooks', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: error.message
+      error: error.message,
+      details: error.response?.data
     });
   }
 });
@@ -291,7 +313,11 @@ app.get('/config-check', (req, res) => {
     openphone: {
       apiKey: !!config.openphone.apiKey,
     },
-    baseUrl: config.baseUrl
+    baseUrl: config.baseUrl,
+    environmentCheck: {
+      NODE_ENV: process.env.NODE_ENV || 'development',
+      PORT: process.env.PORT || 'not set'
+    }
   };
   
   res.json(configStatus);
@@ -301,6 +327,12 @@ app.get('/config-check', (req, res) => {
 app.listen(config.port, () => {
   console.log(`Teams-OpenPhone sync service running on port ${config.port}`);
   console.log(`Webhook URL: ${config.baseUrl}`);
+  console.log('Environment variables loaded:');
+  console.log(`- TEAMS_TENANT_ID: ${config.teams.tenantId ? 'Set' : 'Missing'}`);
+  console.log(`- TEAMS_CLIENT_ID: ${config.teams.clientId ? 'Set' : 'Missing'}`);
+  console.log(`- TEAMS_CLIENT_SECRET: ${config.teams.clientSecret ? 'Set' : 'Missing'}`);
+  console.log(`- OPENPHONE_API_KEY: ${config.openphone.apiKey ? 'Set' : 'Missing'}`);
+  console.log(`- BASE_URL: ${config.baseUrl}`);
   console.log('After deployment, visit /setup-webhooks to configure OpenPhone webhooks');
   console.log('Visit /config-check to verify your environment variables');
 });
