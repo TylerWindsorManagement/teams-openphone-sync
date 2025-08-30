@@ -1,0 +1,30 @@
+{
+  "name": "teams-openphone-sync",
+  "version": "1.0.0",
+  "description": "Sync status between Microsoft Teams and OpenPhone",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "microsoft-teams",
+    "openphone",
+    "webhook",
+    "integration",
+    "presence",
+    "status"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0",
+    "crypto": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
