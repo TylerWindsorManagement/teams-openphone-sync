@@ -323,6 +323,21 @@ app.get('/config-check', (req, res) => {
   res.json(configStatus);
 });
 
+// Debug endpoint to check individual environment variables
+app.get('/debug-env', (req, res) => {
+  res.json({
+    raw_env: {
+      TEAMS_TENANT_ID: process.env.TEAMS_TENANT_ID || 'undefined',
+      TEAMS_CLIENT_ID: process.env.TEAMS_CLIENT_ID || 'undefined',
+      TEAMS_CLIENT_SECRET: process.env.TEAMS_CLIENT_SECRET ? 'exists' : 'missing',
+      OPENPHONE_API_KEY: process.env.OPENPHONE_API_KEY ? 'exists' : 'missing',
+      BASE_URL: process.env.BASE_URL || 'undefined',
+      NODE_ENV: process.env.NODE_ENV || 'undefined',
+      PORT: process.env.PORT || 'undefined'
+    }
+  });
+});
+
 // Start the server
 app.listen(config.port, () => {
   console.log(`Teams-OpenPhone sync service running on port ${config.port}`);
