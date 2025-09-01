@@ -50,15 +50,32 @@ async function getTeamsAccessToken() {
 
 function getTeamsUserFromOpenPhoneUser(openPhoneUserId) {
   console.log(`Looking up user mapping for: "${openPhoneUserId}"`);
+  console.log(`User ID length: ${openPhoneUserId.length}`);
+  console.log(`User ID character codes:`, [...openPhoneUserId].map(c => c.charCodeAt(0)));
+  
+  // Clean the user ID of any potential invisible characters
+  const cleanUserId = openPhoneUserId.trim().replace(/[\u200B-\u200D\uFEFF]/g, '');
+  console.log(`Cleaned user ID: "${cleanUserId}"`);
   
   const userMapping = {
     'US2gwvMWKA': 'Tyler@WindsorM.com',
   };
   
-  console.log('Available mappings:', Object.keys(userMapping));
-  const result = userMapping[openPhoneUserId];
-  console.log(`Mapping result: ${result || 'not found'}`);
+  // Try both the original and cleaned versions
+  let result = userMapping[openPhoneUserId] || userMapping[cleanUserId];
   
+  // If still not found, try a case-insensitive search
+  if (!result) {
+    const lowerUserId = cleanUserId.toLowerCase();
+    for (const [key, value] of Object.entries(userMapping)) {
+      if (key.toLowerCase() === lowerUserId) {
+        result = value;
+        break;
+      }
+    }
+  }
+  
+  console.log(`Final mapping result: ${result || 'not found'}`);
   return result;
 }
 
