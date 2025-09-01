@@ -160,26 +160,25 @@ app.post('/webhook/openphone', async (req, res) => {
         console.log(`No Teams user mapping found for OpenPhone user: ${openPhoneUserId}`);
       }
       
-          } else if (event.type === 'call.completed') {
-        const callData = event.data.object;
-        const callId = callData.id;
-        const openPhoneUserId = callData.userId;
-        
-        // Remove from active calls
-        const activeCall = activeCalls.get(callId);
-        activeCalls.delete(callId);
-        
-        // Get corresponding Teams user
-        const teamsUser = getTeamsUserFromOpenPhoneUser(openPhoneUserId);
-        
-        if (teamsUser) {
-          // Always try to set status back to Available when call completes
-          // This handles cases where we missed the call.ringing event
-          await setTeamsPresence(teamsUser, 'Available', 'Available');
-          console.log(`Updated Teams status for ${teamsUser}: call ${callId} completed, back to available`);
-        } else {
-          console.log(`No Teams user mapping found for OpenPhone user: ${openPhoneUserId}`);
-        }
+    } else if (event.type === 'call.completed') {
+      const callData = event.data.object;
+      const callId = callData.id;
+      const openPhoneUserId = callData.userId;
+      
+      // Remove from active calls
+      const activeCall = activeCalls.get(callId);
+      activeCalls.delete(callId);
+      
+      // Get corresponding Teams user
+      const teamsUser = getTeamsUserFromOpenPhoneUser(openPhoneUserId);
+      
+      if (teamsUser) {
+        // Always try to set status back to Available when call completes
+        // This handles cases where we missed the call.ringing event
+        await setTeamsPresence(teamsUser, 'Available', 'Available');
+        console.log(`Updated Teams status for ${teamsUser}: call ${callId} completed, back to available`);
+      } else {
+        console.log(`No Teams user mapping found for OpenPhone user: ${openPhoneUserId}`);
       }
     }
 
