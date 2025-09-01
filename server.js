@@ -86,7 +86,7 @@ async function setTeamsPresence(userEmail, availability, activity) {
     const response = await axios.post(
       `https://graph.microsoft.com/v1.0/users/${userEmail}/presence/setPresence`,
       {
-        sessionId: crypto.randomUUID(),
+        sessionId: config.teams.clientId,  // Use client ID instead of random UUID
         availability: availability,
         activity: activity
       },
