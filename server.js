@@ -58,7 +58,7 @@ function getTeamsUserFromOpenPhoneUser(openPhoneUserId) {
   console.log(`Cleaned user ID: "${cleanUserId}"`);
   
   const userMapping = {
-    'US2gwvMWKA': 'Tyler@WindsorM.com',
+    'US2gwvNWXA': 'Tyler@WindsorM.com',
   };
   
   // Try both the original and cleaned versions
