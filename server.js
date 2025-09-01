@@ -49,11 +49,17 @@ async function getTeamsAccessToken() {
 }
 
 function getTeamsUserFromOpenPhoneUser(openPhoneUserId) {
+  console.log(`Looking up user mapping for: "${openPhoneUserId}"`);
+  
   const userMapping = {
     'US2gwvMWKA': 'Tyler@WindsorM.com',
   };
   
-  return userMapping[openPhoneUserId];
+  console.log('Available mappings:', Object.keys(userMapping));
+  const result = userMapping[openPhoneUserId];
+  console.log(`Mapping result: ${result || 'not found'}`);
+  
+  return result;
 }
 
 // Set Teams presence
