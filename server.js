@@ -48,13 +48,9 @@ async function getTeamsAccessToken() {
   }
 }
 
-// Get Teams user ID from OpenPhone user ID (you'll need to maintain this mapping)
 function getTeamsUserFromOpenPhoneUser(openPhoneUserId) {
-  // You'll need to create a mapping between OpenPhone users and Teams users
-  // This could be stored in environment variables, a database, or a config file
   const userMapping = {
-    // Example: 'openphone_user_id': 'teams_user_email@company.com'
-    // You'll populate this with your actual user mappings
+    'US2gwvMWKA': 'Tyler@WindsorM.com',
   };
   
   return userMapping[openPhoneUserId];
